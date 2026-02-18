@@ -22,6 +22,8 @@ import lombok.experimental.FieldDefaults;
 import jakarta.validation.constraints.Email;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Collections;
+
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -75,6 +77,6 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.emptyList();
     }
 }

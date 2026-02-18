@@ -5,7 +5,9 @@ import java.util.List;
 
 import com.teamdev.group_up.enums.Branch;
 import com.teamdev.group_up.enums.Year;
+import lombok.Builder;
 
+@Builder
 public record SearchGroupRequest(
     String keyword,
     List<Long> tagIds,

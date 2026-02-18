@@ -1,14 +1,14 @@
 package com.teamdev.group_up.service.Impl;
 
+import com.teamdev.group_up.dto.auth.UpdateProfileRequest;
+import jakarta.validation.Valid;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.teamdev.group_up.dto.auth.UserProfileResponse;
-import com.teamdev.group_up.entity.User;
 import com.teamdev.group_up.error.ResourceNotFoundException;
-import com.teamdev.group_up.mapper.UserMapper;
 import com.teamdev.group_up.repository.UserRepository;
 import com.teamdev.group_up.service.UserService;
 
@@ -25,6 +25,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserProfileResponse getProfile(Long userId) {
+        return null;
+    }
+
+    @Override
+    public UserProfileResponse getUserProfile() {
+        return null;
+    }
+
+    @Override
+    public UserProfileResponse updateUserProfile(@Valid UpdateProfileRequest request) {
         return null;
     }
 

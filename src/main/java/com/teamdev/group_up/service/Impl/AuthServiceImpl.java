@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("User already exists with username: "+request.username());
         });
 
-        User user = userMapper.toEntity(request);
+        User user = userMapper.toUserEntityFromSignupRequest(request);
         user.setPassword(passwordEncoder.encode(request.password()));
         user = userRepository.save(user);
 

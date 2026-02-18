@@ -3,22 +3,21 @@ spring:
     name: GroupUp
 
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521:xe
-    username: system
-    password: root
+    url: jdbc:oracle:thin:@localhost:1521/XEPDB1
+    username: unicircle_app
+    password: mypassword
     driver-class-name: oracle.jdbc.OracleDriver
 
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-    open-in-view: false  
+    open-in-view: false
     properties:
       hibernate:
-        # dialect: org.hibernate.dialect.OracleDialect  # ← REMOVE/COMMENT THIS (auto-detected)
         format_sql: true
         jdbc:
-          fetch_size: 50  
+          fetch_size: 50
 
 jwt:
   secret-key: as9b7aodlbjfkluosfd789ujeklfnlsduf90b8ha908w74tuqijvlckajdl
