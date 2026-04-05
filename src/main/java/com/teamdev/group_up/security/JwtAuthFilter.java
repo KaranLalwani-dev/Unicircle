@@ -1,6 +1,8 @@
 package com.teamdev.group_up.security;
 
 import java.io.IOException;
+import java.util.List;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -22,6 +24,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("incoming request: {}", request.getRequestURI());
+        log.info("auth header: {}", request.getHeader("Authorization"));
 
         final String requestHeaderToken = request.getHeader("Authorization");
         if(requestHeaderToken == null || !requestHeaderToken.startsWith("Bearer ")) {
@@ -31,12 +34,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String jwtToken = requestHeaderToken.split("Bearer ")[1];
 
-        JwtUserPrincipal user = authUtil.verifyAccessToken(jwtToken);
-        if(user != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    user, null
-            );
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        try {
+            JwtUserPrincipal user = authUtil.verifyAccessToken(jwtToken);
+            log.info("verified user: {}", user);
+            if (user != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(user, null, List.of());
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                log.info("authentication set successfully");  // add this
+            }
+        } catch (Exception e) {
+            log.error("JWT verification failed: {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);

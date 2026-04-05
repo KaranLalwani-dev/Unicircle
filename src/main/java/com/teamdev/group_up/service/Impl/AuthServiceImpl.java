@@ -59,10 +59,4 @@ public class AuthServiceImpl implements AuthService {
         String token = authUtil.generateAccessToken(user);
         return new AuthResponse(token, userMapper.toUserProfileResponse(user));
     }
-
-
-    
-
-
-    
 }

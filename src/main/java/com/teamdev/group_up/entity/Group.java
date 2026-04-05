@@ -1,13 +1,6 @@
 package com.teamdev.group_up.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +11,9 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.teamdev.group_up.enums.GroupStatus;
 
 @Entity
@@ -34,8 +30,9 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long groupId;
 
-    @Column(nullable = false)
-    Long creatorId;
+    @ManyToOne
+    @JoinColumn(name = "creatorId", nullable = false)
+    User creator;
 
     @Column(nullable = false, length = 200)
     String title;
@@ -49,10 +46,6 @@ public class Group {
     @Column(nullable = false)
     Integer maxMembers;
 
-    @Column(nullable = false)
-    @Default
-    Integer currentMembers = 1;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     @Default
@@ -61,4 +54,8 @@ public class Group {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     Instant createdAt;
+
+    @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    List<GroupTag> groupTags = new ArrayList<>();
 }

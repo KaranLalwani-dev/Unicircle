@@ -18,4 +18,8 @@ public enum Branch {
 
     private final String code;
     private final String fullName;
+
+    public String getValue() {
+        return code;
+    }
 }

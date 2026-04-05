@@ -1,8 +1,5 @@
 package com.teamdev.group_up.entity;
 
-
-
-
 import org.hibernate.annotations.CreationTimestamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,15 +28,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.teamdev.group_up.enums.Branch;
 import com.teamdev.group_up.enums.Year;
 
+@Entity
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-@Entity
 @Table(name = "users")
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long userId;

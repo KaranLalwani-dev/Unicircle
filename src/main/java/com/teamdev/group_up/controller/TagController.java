@@ -23,7 +23,6 @@ public class TagController {
     @GetMapping
     public ResponseEntity<List<TagResponse>> getAllTags(){
         List<TagResponse> tags = tagsService.getAllTags();
-
         return ResponseEntity.ok(tags);
     }
 

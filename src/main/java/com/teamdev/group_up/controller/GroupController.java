@@ -82,7 +82,7 @@ public class GroupController {
         return ResponseEntity.ok(groups);
     }
 
-    @PutMapping("/{groupId}/cancel")
+    @PatchMapping("/{groupId}/cancel")
     public ResponseEntity<Void> cancelGroup(@PathVariable Long groupId) {
         groupService.cancelGroup(groupId);
         return ResponseEntity.noContent().build();

@@ -19,6 +19,9 @@ public class TagsServiceImpl implements TagsService {
 
     @Override
     public List<TagResponse> getAllTags() {
-        return List.of();
+        return tagRepository.findAll()
+                .stream()
+                .map(tag -> new TagResponse(tag.getTagId(), tag.getTagName()))
+                .toList();
     }
 }

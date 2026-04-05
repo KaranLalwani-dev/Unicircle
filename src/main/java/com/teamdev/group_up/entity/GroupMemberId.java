@@ -12,11 +12,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class GroupTagId implements Serializable {
-
+public class GroupMemberId implements Serializable {
     @Column(name = "group_id")
     Long groupId;
-
-    @Column(name = "tag_id")
-    Long tagId;
+    @Column(name = "user_id")
+    Long userId;
 }

@@ -1,11 +1,6 @@
 package com.teamdev.group_up.entity;
 
-
-import java.time.Instant;
-
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+
 @Entity
 @Getter
 @Setter
@@ -21,21 +17,13 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "group_members")
-public class GroupMember {
+@Table(name = "tags")
+public class Tag {
 
-    @EmbeddedId
-    GroupMemberId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long tagId;
 
-    @ManyToOne
-    @MapsId("groupId")
-    Group group;
-
-    @ManyToOne
-    @MapsId("userId")
-    User user;
-
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    Instant joinedAt;
+    @Column(nullable = false, unique = true, length = 50)
+    String tagName;
 }

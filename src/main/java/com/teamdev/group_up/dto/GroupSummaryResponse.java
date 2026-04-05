@@ -17,7 +17,10 @@ public record GroupSummaryResponse(
     GroupStatus status,
     List<TagResponse> tags,
     UserProfileResponse creator,
-    Instant createdAt
+    Instant createdAt,
+    Boolean isCreator,
+    Boolean isMember,
+    Boolean hasPendingRequest
 ) {
     
 }

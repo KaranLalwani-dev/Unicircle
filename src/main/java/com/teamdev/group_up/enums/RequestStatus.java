@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum RequestStatus {
     PENDING("pending"),
-    APPROVED("approved"),
+    ACCEPTED("accepted"),
     REJECTED("rejected");
 
     private final String value;

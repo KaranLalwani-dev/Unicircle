@@ -6,7 +6,7 @@ import com.teamdev.group_up.enums.Year;
 public record UserProfileResponse(
     Long userId,
     String name,
-    String email,
+    String username,
     Year year,
     Branch branch,
     String instagramId,

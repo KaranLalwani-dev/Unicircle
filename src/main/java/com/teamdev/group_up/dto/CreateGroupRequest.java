@@ -3,12 +3,7 @@ package com.teamdev.group_up.dto;
 import java.time.Instant;
 import java.util.List;
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public record CreateGroupRequest(
     @NotBlank(message = "Group name is required")
@@ -28,7 +23,7 @@ public record CreateGroupRequest(
     @Max(value = 20, message = "Maximum 20 members allowed")
     Integer maxMembers,
 
-    @NotBlank(message = "At least one tag is required")
+    @NotEmpty(message = "At least one tag is required")
     @Size(min = 1, max = 5, message = "Select between 1 and 5 tags")
     List<Long> tagIds
 ) {

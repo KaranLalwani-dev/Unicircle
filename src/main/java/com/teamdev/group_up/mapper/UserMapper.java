@@ -9,7 +9,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    @Mapping(source = "name", target = "name")
     User toUserEntityFromSignupRequest(SignupRequest signupRequest);
     UserProfileResponse toUserProfileResponse(User user);
 }

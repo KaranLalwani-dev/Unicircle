@@ -1,17 +1,10 @@
 package com.teamdev.group_up.entity;
 
 import java.time.Instant;
+
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import com.teamdev.group_up.enums.RequestStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,35 +15,36 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 
+@Entity
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-@Entity
-@Table(name = "join_requests", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"groupId", "userId"})
-})
+@Table(name = "join_requests")
 public class JoinRequest {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long requestId;
 
-    @Column(nullable = false)
-    Long groupId;
+    @ManyToOne
+    @JoinColumn(name = "groupId", nullable = false)
+    Group group;
 
-    @Column(nullable = false)
-    Long userId;
+    @ManyToOne
+    @JoinColumn(name = "userId", nullable = false)
+    User user;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     @Default
     RequestStatus status = RequestStatus.PENDING;
-    
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     Instant requestedAt;
 
     Instant respondedAt;
-}       
+}

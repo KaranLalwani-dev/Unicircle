@@ -18,8 +18,9 @@ public record GroupDetailResponse(
     List<TagResponse> tags,
     UserProfileResponse creator,
     List<UserProfileResponse> members,
-    Integer pendingRequestsCount,
-    Instant createdAt
-) {
+    Instant createdAt,
+    Boolean isCreator,
+    Boolean isMember,
+    Boolean hasPendingRequest) {
     
 }
