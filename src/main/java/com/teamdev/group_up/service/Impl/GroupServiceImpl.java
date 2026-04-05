@@ -47,7 +47,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public JoinRequestResponse requestToJoinGroup(Long groupId, JoinGroupRequest request) {
+    public JoinRequestResponse requestToJoinGroup(Long groupId) {
         return null;
     }
 

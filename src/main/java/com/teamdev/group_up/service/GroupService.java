@@ -22,7 +22,7 @@ public interface GroupService{
 
     void cancelGroup(Long groupId);
 
-    JoinRequestResponse requestToJoinGroup(Long groupId, JoinGroupRequest request);
+    JoinRequestResponse requestToJoinGroup(Long groupId);
 
     void leaveGroup(Long groupId);
 

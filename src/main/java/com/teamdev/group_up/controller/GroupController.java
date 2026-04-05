@@ -90,9 +90,8 @@ public class GroupController {
 
     @PostMapping("/{groupId}/join")
     public ResponseEntity<JoinRequestResponse> requestToJoinGroup(
-            @PathVariable Long groupId, @RequestBody(required = false)
-            JoinGroupRequest request) {
-        JoinRequestResponse response = groupService.requestToJoinGroup(groupId, request);
+            @PathVariable Long groupId) {
+        JoinRequestResponse response = groupService.requestToJoinGroup(groupId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
