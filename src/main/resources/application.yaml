@@ -3,9 +3,9 @@ spring:
     name: GroupUp
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/unicircleDB
-    username: postgres
-    password: sakai@200
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -18,6 +18,9 @@ spring:
         format_sql: true
         jdbc:
           fetch_size: 50
+
+frontend:
+  url: ${FRONTEND_URL}
 
 jwt:
   secret-key: as9b7aodlbjfkluosfd789ujeklfnlsduf90b8ha908w74tuqijvlckajdl
