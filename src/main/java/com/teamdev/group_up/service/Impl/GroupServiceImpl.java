@@ -7,7 +7,6 @@ import com.teamdev.group_up.enums.GroupStatus;
 import com.teamdev.group_up.enums.RequestStatus;
 import com.teamdev.group_up.error.BadRequestException;
 import com.teamdev.group_up.error.ResourceNotFoundException;
-import com.teamdev.group_up.mapper.GroupMapper;
 import com.teamdev.group_up.mapper.UserMapper;
 import com.teamdev.group_up.repository.*;
 import com.teamdev.group_up.security.AuthUtil;
@@ -37,7 +36,6 @@ public class GroupServiceImpl implements GroupService {
     JoinRequestRepository joinRequestRepository;
     TagRepository tagRepository;
     UserRepository userRepository;
-    GroupMapper groupMapper;
     UserMapper userMapper;
     AuthUtil authUtil;
 

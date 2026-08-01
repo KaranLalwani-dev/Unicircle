@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
@@ -46,6 +47,7 @@ public class User implements UserDetails {
     String name;
 
     @Email
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@learner\\.manipal\\.edu$", flags = Pattern.Flag.CASE_INSENSITIVE, message = "please login with your college email id")
     @Column(nullable = false, unique = true, length = 100)
     String username;
 

@@ -4,7 +4,6 @@ import com.teamdev.group_up.dto.*;
 import com.teamdev.group_up.dto.auth.UserProfileResponse;
 import com.teamdev.group_up.enums.Branch;
 import com.teamdev.group_up.enums.Year;
-import com.teamdev.group_up.error.ApiError;
 import com.teamdev.group_up.service.GroupService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

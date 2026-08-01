@@ -3,10 +3,10 @@ spring:
     name: GroupUp
 
   datasource:
-    url: jdbc:oracle:thin:@localhost:1521/XEPDB1
-    username: unicircle_app
-    password: mypassword
-    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:postgresql://localhost:5432/unicircleDB
+    username: postgres
+    password: sakai@200
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:

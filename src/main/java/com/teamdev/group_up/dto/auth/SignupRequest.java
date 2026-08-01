@@ -6,12 +6,14 @@ import com.teamdev.group_up.enums.Year;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record SignupRequest(
 
         @NotBlank(message = "Email is required")
         @Email(message = "Email should be valid")
+        @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@learner\\.manipal\\.edu$", flags = Pattern.Flag.CASE_INSENSITIVE, message = "please login with your college email id")
         String username,
 
         @NotBlank(message = "Password is required")
