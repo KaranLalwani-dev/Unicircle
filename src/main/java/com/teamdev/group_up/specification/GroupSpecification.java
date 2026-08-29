@@ -14,7 +14,6 @@ import java.time.Instant;
 import java.util.List;
 
 public class GroupSpecification {
-
     public static Specification<Group> withFilters(SearchGroupRequest request) {
         return Specification
                 .where(excludeCancelled())
