@@ -2,6 +2,8 @@
 
 Unicircle, also named `GroupUp` in the Spring Boot application metadata, is a backend API for creating and joining short-term activity groups. It is designed for college users with `@learner.manipal.edu` email addresses and supports group discovery, tags, membership requests, profile management, and JWT-based authentication.
 
+Frontend Rpository: https://github.com/KaranLalwani-dev/Unicircle-frontend-v2
+
 ## Part 1: Software Details
 
 ### Architecture
