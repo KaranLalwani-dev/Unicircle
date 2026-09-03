@@ -22,7 +22,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "join_requests")
+@Table(name = "join_requests", indexes = {
+        @Index(name = "idx_join_requests_group_id", columnList = "group_id"),
+        @Index(name = "idx_join_requests_user_id", columnList = "user_id")
+})
 public class JoinRequest {
 
     @Id

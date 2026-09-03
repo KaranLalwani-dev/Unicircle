@@ -12,7 +12,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "group_tags")
+@Table(name = "group_tags", indexes = {
+        @Index(name = "idx_group_tags_tag_id", columnList = "tag_id")
+})
 public class GroupTag {
 
     @EmbeddedId

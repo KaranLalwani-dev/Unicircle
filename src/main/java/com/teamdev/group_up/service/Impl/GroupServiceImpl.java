@@ -7,8 +7,12 @@ import com.teamdev.group_up.enums.GroupStatus;
 import com.teamdev.group_up.enums.RequestStatus;
 import com.teamdev.group_up.error.BadRequestException;
 import com.teamdev.group_up.error.ResourceNotFoundException;
+import com.teamdev.group_up.mapper.GroupMapper;
 import com.teamdev.group_up.mapper.UserMapper;
 import com.teamdev.group_up.repository.*;
+import com.teamdev.group_up.repository.projection.GroupIdOnly;
+import com.teamdev.group_up.repository.projection.GroupMemberCountProjection;
+import com.teamdev.group_up.repository.projection.GroupMemberIdOnly;
 import com.teamdev.group_up.security.AuthUtil;
 import com.teamdev.group_up.service.GroupService;
 import com.teamdev.group_up.specification.GroupSpecification;
@@ -22,8 +26,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +37,7 @@ public class GroupServiceImpl implements GroupService {
     GroupRepository groupRepository;
     GroupMemberRepository groupMemberRepository;
     JoinRequestRepository joinRequestRepository;
+    GroupTagRepository groupTagRepository;
     TagRepository tagRepository;
     UserRepository userRepository;
     UserMapper userMapper;
@@ -89,8 +93,37 @@ public class GroupServiceImpl implements GroupService {
     public Page<GroupSummaryResponse> searchGroups(SearchGroupRequest request, PageRequest pageRequest) {
         Long currentUserId = authUtil.getCurrentUserId();
         Specification<Group> spec = GroupSpecification.withFilters(request);
-        return groupRepository.findAll(spec, pageRequest)
-                .map(group -> buildGroupSummaryResponse(group, currentUserId));
+        Page<Group> groupPage = groupRepository.findAll(spec, pageRequest);
+
+        List<Long> groupIds = groupPage.getContent().stream().map(Group::getGroupId).toList();
+        if (groupIds.isEmpty()) {
+            return groupPage.map(group ->
+                    buildGroupSummaryResponse(group, currentUserId, Map.of(), Set.of(), Set.of(), Map.of()));
+        }
+
+        Map<Long, Integer> memberCounts = groupMemberRepository.countByGroupIds(groupIds).stream()
+                .collect(Collectors.toMap(GroupMemberCountProjection::getGroupId,
+                        p -> p.getMemberCount().intValue()));
+
+        Set<Long> memberGroupIds = groupMemberRepository.findMembershipsForUser(groupIds, currentUserId).stream()
+                .map(GroupMemberIdOnly::getGroupId)
+                .collect(Collectors.toSet());
+
+        Set<Long> pendingRequestGroupIds = joinRequestRepository
+                .findPendingRequestGroupIds(groupIds, currentUserId, RequestStatus.PENDING).stream()
+                .map(GroupIdOnly::getGroupId)
+                .collect(Collectors.toSet());
+
+        // batch-fetch tags to avoid N+1 on group.getGroupTags()
+        Map<Long, List<TagResponse>> tagsByGroupId = groupTagRepository.findByGroupIdInWithTag(groupIds).stream()
+                .collect(Collectors.groupingBy(
+                        gt -> gt.getGroup().getGroupId(),
+                        Collectors.mapping(
+                                gt -> new TagResponse(gt.getTag().getTagId(), gt.getTag().getTagName()),
+                                Collectors.toList())));
+
+        return groupPage.map(group ->
+                buildGroupSummaryResponse(group, currentUserId, memberCounts, memberGroupIds, pendingRequestGroupIds, tagsByGroupId));
     }
 
     @Override
@@ -248,19 +281,21 @@ public class GroupServiceImpl implements GroupService {
         );
     }
 
-    private GroupSummaryResponse buildGroupSummaryResponse(Group group, Long currentUserId) {
-        List<TagResponse> tags = group.getGroupTags().stream()
-                .map(gt -> new TagResponse(gt.getTag().getTagId(), gt.getTag().getTagName()))
-                .toList();
+    private GroupSummaryResponse buildGroupSummaryResponse(
+            Group group, Long currentUserId,
+            Map<Long, Integer> memberCounts, Set<Long> memberGroupIds, Set<Long> pendingRequestGroupIds,
+            Map<Long, List<TagResponse>> tagsByGroupId) {
 
-        int currentMembers = groupMemberRepository.countById_GroupId(group.getGroupId());
+        Long groupId = group.getGroupId();
+        List<TagResponse> tags = tagsByGroupId.getOrDefault(groupId, List.of());
+
+        int currentMembers = memberCounts.getOrDefault(groupId, 0);
         boolean isCreator = group.getCreator().getUserId().equals(currentUserId);
-        boolean isMember = groupMemberRepository.existsById_GroupIdAndId_UserId(group.getGroupId(), currentUserId);
-        boolean hasPendingRequest = joinRequestRepository
-                .existsByGroup_GroupIdAndUser_UserIdAndStatus(group.getGroupId(), currentUserId, RequestStatus.PENDING);
+        boolean isMember = memberGroupIds.contains(groupId);
+        boolean hasPendingRequest = pendingRequestGroupIds.contains(groupId);
 
         return new GroupSummaryResponse(
-                group.getGroupId(),
+                groupId,
                 group.getTitle(),
                 group.getDescription(),
                 group.getActivityDateTime(),
@@ -274,6 +309,27 @@ public class GroupServiceImpl implements GroupService {
                 isMember,
                 hasPendingRequest
         );
+    }
+
+    private GroupSummaryResponse buildGroupSummaryResponse(Group group, Long currentUserId) {
+        int currentMembers = groupMemberRepository.countById_GroupId(group.getGroupId());
+        boolean isMember = groupMemberRepository.existsById_GroupIdAndId_UserId(group.getGroupId(), currentUserId);
+        boolean hasPendingRequest = joinRequestRepository
+                .existsByGroup_GroupIdAndUser_UserIdAndStatus(group.getGroupId(), currentUserId, RequestStatus.PENDING);
+
+        Long groupId = group.getGroupId();
+        Map<Long, Integer> memberCounts = Map.of(groupId, currentMembers);
+        Set<Long> memberGroupIds = isMember ? Set.of(groupId) : Collections.<Long>emptySet();
+        Set<Long> pendingRequestGroupIds = hasPendingRequest ? Set.of(groupId) : Collections.<Long>emptySet();
+
+        Map<Long, List<TagResponse>> tagsByGroupId = groupTagRepository.findByGroupIdInWithTag(List.of(groupId)).stream()
+                .collect(Collectors.groupingBy(
+                        gt -> gt.getGroup().getGroupId(),
+                        Collectors.mapping(
+                                gt -> new TagResponse(gt.getTag().getTagId(), gt.getTag().getTagName()),
+                                Collectors.toList())));
+
+        return buildGroupSummaryResponse(group, currentUserId, memberCounts, memberGroupIds, pendingRequestGroupIds, tagsByGroupId);
     }
 
     private JoinRequestResponse buildJoinRequestResponse(JoinRequest joinRequest) {

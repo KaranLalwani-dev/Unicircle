@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/unicircle
+    username: unicircle
+    password: localdev
+    hikari:
+      maximum-pool-size: 25
+      minimum-idle: 25
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+frontend:
+  url: http://localhost:3000
+
+jwt:
+  secret-key: dGhpc2lzYWxvY2FsdGVzdG9ubHlzZWNyZXRrZXlkb25vdHVzZWlucHJvZA==

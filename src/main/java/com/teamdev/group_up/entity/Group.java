@@ -23,7 +23,10 @@ import com.teamdev.group_up.enums.GroupStatus;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "groups")
+@Table(name = "groups", indexes = {
+        @Index(name = "idx_groups_activity_date_time", columnList = "activity_date_time"),
+        @Index(name = "idx_groups_status", columnList = "status")
+})
 public class Group {
 
     @Id
